@@ -165,6 +165,14 @@ defmodule Tds.Parameter do
     %{param | type: :datetimeoffset}
   end
 
+  def fix_data_type(%__MODULE__{value: <<1::1>>} = param) do
+    %{param | type: :boolean, value: 1}
+  end
+
+  def fix_data_type(%__MODULE__{value: <<0::1>>} = param) do
+    %{param | type: :boolean, value: 0}
+  end
+
   def fix_data_type(%__MODULE__{} = raw_param, acc) do
     param =
       if is_nil(raw_param.name) do
